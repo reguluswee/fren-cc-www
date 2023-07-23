@@ -24,6 +24,9 @@ import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Breadcrumbs from "~/components/Breadcrumbs";
 
+const stakeAddress = "0x3a6370B6C99a776833540f1eB884417604011a68"
+const stakeAbi = [{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint8","name":"version","type":"uint8"}],"name":"Initialized","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"uint256","name":"term","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"stakeAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"estimateReward","type":"uint256"}],"name":"Staked","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"uint256","name":"term","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"stakeAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"reward","type":"uint256"}],"name":"Withdrawn","type":"event"},{"inputs":[],"name":"FREN_BSC","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"MAX_STAKE_AMOUNT","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"MIN_STAKE_AMOUNT","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"SECONDS_IN_DAY","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"SECONDS_IN_HOUR","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"activeStakes","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"durationDays","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"remainBalance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"stakeSel","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"startTs","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"userStakes","outputs":[{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"uint256","name":"stakeTs","type":"uint256"},{"internalType":"uint256","name":"stakeTerm","type":"uint256"},{"internalType":"uint256","name":"mrr","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"initialize","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_startTs","type":"uint256"},{"internalType":"uint256","name":"_duration","type":"uint256"}],"name":"setTsAndDura","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"rewardBalance","type":"uint256"}],"name":"addReward","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"term","type":"uint256"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"stake","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"withdraw","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_owner","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"withdraw","outputs":[],"stateMutability":"nonpayable","type":"function"}]
+
 const Stake = () => {
   const { t } = useTranslation("common");
 
@@ -36,13 +39,13 @@ const Stake = () => {
 
   const { handleSubmit } = useForm();
 
-  const { userStake, feeData } = useContext(XENContext);
+  const { feeData } = useContext(XENContext);
 
   const { config } = usePrepareContractWrite({
-    addressOrName: xenContract(chain).addressOrName,
-    contractInterface: XENCryptoABI,
+    addressOrName: stakeAddress,
+    contractInterface: stakeAbi,
     functionName: "withdraw",
-    enabled: (userStake && !userStake.term.isZero()) ?? false,
+    // enabled: (userStake && !userStake.term.isZero()) ?? false,
   });
   const { data: withdrawData, write: writeStake } = useContractWrite({
     ...config,
@@ -63,18 +66,8 @@ const Stake = () => {
   };
 
   useEffect(() => {
-    if (
-      !processing &&
-      address &&
-      userStake &&
-      !userStake.maturityTs?.isZero()
-    ) {
-      setDisabled(false);
-      if (UTC_TIME < userStake.maturityTs.toNumber() ?? 0) {
-        setEarlyEndStake(true);
-      }
-    }
-  }, [address, userStake, router, processing]);
+    
+  }, [address, router, processing]);
 
   return (
     <Container className="max-w-2xl">
@@ -100,7 +93,7 @@ const Stake = () => {
               <h2 className="card-title text-neutral">{t("stake.end")}</h2>
 
               <div className="stats glass w-full text-neutral">
-                <CountDataCard
+                {/* <CountDataCard
                   title={t("card.reward")}
                   value={calculateStakeReward({
                     maturityTs: Number(userStake?.maturityTs ?? 0),
@@ -109,7 +102,7 @@ const Stake = () => {
                     apy: Number(userStake?.apy ?? 0),
                   })}
                   description="XEN"
-                />
+                /> */}
               </div>
 
               {earlyEndStake && (

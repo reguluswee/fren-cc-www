@@ -28,16 +28,7 @@ const Dashboard: NextPage = () => {
 
   const {
     setChainOverride,
-    globalRank,
-    activeMinters,
-    activeStakes,
-    totalXenStaked,
     totalSupply,
-    currentMaxTerm,
-    genesisTs,
-    currentAMP,
-    currentEAAR,
-    currentAPY,
   } = useContext(XENContext);
 
   const { data: token } = useToken({
@@ -48,19 +39,19 @@ const Dashboard: NextPage = () => {
   const generalStats = [
     {
       title: t("card.global-rank"),
-      value: globalRank,
+      value: 0,
     },
     {
       title: t("card.active-mints"),
-      value: activeMinters,
+      value: 0,
     },
     {
       title: t("card.active-stakes"),
-      value: activeStakes,
+      value: 0,
     },
     {
       title: t("card.max-mint-term"),
-      value: currentMaxTerm / 86400,
+      value: 0 / 86400,
       suffix: " Days",
     },
   ];
@@ -68,38 +59,11 @@ const Dashboard: NextPage = () => {
   const stakeItems = [
     {
       title: t("card.total"),
-      value: (totalSupply + totalXenStaked) / 1e18,
+      value: (totalSupply) / 1e18,
     },
     {
       title: t("card.liquid"),
       value: totalSupply / 1e18,
-    },
-    {
-      title: t("card.staked"),
-      value: totalXenStaked / 1e18,
-    },
-  ];
-
-  const rewardsItems = [
-    {
-      title: t("dashboard.amp"),
-      value: currentAMP,
-      decimals: 0,
-      tooltip: t("dashboard.amp-description"),
-    },
-    {
-      title: t("dashboard.eaa"),
-      value: currentEAAR / 10.0,
-      decimals: 2,
-      suffix: "%",
-      tooltip: t("dashboard.eaa-description"),
-    },
-    {
-      title: t("dashboard.apy"),
-      value: currentAPY,
-      decimals: 0,
-      suffix: "%",
-      tooltip: t("dashboard.apy-description"),
     },
   ];
 
@@ -145,11 +109,7 @@ const Dashboard: NextPage = () => {
                 value={chainFromId?.name ?? "Ethereum"}
                 id={chainFromId?.id ?? 1}
               />
-              <DateStatCard
-                title={t("dashboard.days-since-launch")}
-                dateTs={genesisTs}
-                isPast={true}
-              />
+              
               {token && (
                 <DataCard
                   title={t("dashboard.token-address")}
@@ -178,22 +138,6 @@ const Dashboard: NextPage = () => {
                   key={index}
                   title={item.title}
                   value={item.value}
-                />
-              ))}
-            </div>
-          </CardContainer>
-
-          <CardContainer>
-            <h2 className="card-title">{t("dashboard.rewards")}</h2>
-            <div className="stats stats-vertical bg-transparent text-neutral">
-              {rewardsItems.map((item, index) => (
-                <NumberStatCard
-                  key={index}
-                  title={item.title}
-                  value={item.value}
-                  decimals={item.decimals}
-                  suffix={item.suffix}
-                  tooltip={item.tooltip}
                 />
               ))}
             </div>

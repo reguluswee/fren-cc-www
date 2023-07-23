@@ -25,7 +25,7 @@ const Manage: NextPage = () => {
     "storedAddresses",
     {}
   );
-  const { globalRank } = useContext(XENContext);
+  const { } = useContext(XENContext);
 
   const schema = yup
     .object()

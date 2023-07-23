@@ -22,7 +22,7 @@ const Portfolio: NextPage = () => {
     "storedAddresses",
     []
   );
-  const { globalRank } = useContext(XENContext);
+  const {  } = useContext(XENContext);
 
   const schema = yup
     .object()
@@ -144,7 +144,7 @@ const Portfolio: NextPage = () => {
                     <tr key={index}>
                       <PortfolioAddressRow
                         chain={chain}
-                        globalRankData={globalRank}
+                        globalRankData={0}
                         item={item}
                         index={index}
                         register={register}
