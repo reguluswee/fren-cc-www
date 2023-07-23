@@ -10,10 +10,10 @@ const Meta: NextPage = () => {
   const { asPath } = router;
   const path = asPath.split("/").filter((item) => item !== "");
 
-  const title = `XEN.fyi - ${path.join(" - ")}`;
+  const title = `FREN - ${path.join(" - ")}`;
   const description = t("meta.description");
-  const url = "https://xen.fyi";
-  const image = "https://xen.fyi/images/preview.png";
+  const url = "https://fenus.xyz";
+  const image = "https://chain.fenus.xyz/images/fren.jpg";
 
   return (
     <Head>
@@ -27,10 +27,10 @@ const Meta: NextPage = () => {
       />
       <meta charSet="utf-8" />
       <meta name="description" content={description} />
-      <meta name="author" content="Joe Blau joe@atomize.xyz" />
+      <meta name="author" content="Jackie" />
       <meta
         name="keywords"
-        content="xen.fyi, xen crypto, xencrypto, xen, crypto, xen.network, token, ethereum, avalanche, polygon, binance, moonbeam, evmos, fantom, dogechain"
+        content="fren, ethereum, binance smart chain, bsc"
       />
 
       {/* Apple */}
@@ -38,7 +38,7 @@ const Meta: NextPage = () => {
       <link rel="apple-touch-icon" sizes="152x152" href="touch-icon-152.png" />
       <link rel="apple-touch-icon" sizes="180x180" href="touch-icon-180.png" />
       <link rel="apple-touch-icon" sizes="167x167" href="touch-icon-167.png" />
-      <meta name="apple-mobile-web-app-title" content="XEN" />
+      <meta name="apple-mobile-web-app-title" content="FREN" />
       <meta name="apple-mobile-web-app-capable" content="yes" />
 
       {/* PWA */}

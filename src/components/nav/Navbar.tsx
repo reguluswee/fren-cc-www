@@ -29,7 +29,7 @@ export const Navbar: NextPage = () => {
   const { resolvedTheme, setTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
 
-  const { userMint, userStake, token } = useContext(XENContext);
+  const { token } = useContext(XENContext);
 
   const NavigationItems = (props: any) => {
     return (
@@ -39,8 +39,6 @@ export const Navbar: NextPage = () => {
             <Link
               href={(() => {
                 switch (index) {
-                  case 1:
-                    return `/mint/${mintPageOverride}`;
                   case 2:
                     return `/stake/${stakePageOverride}`;
                   default:
@@ -77,25 +75,25 @@ export const Navbar: NextPage = () => {
   };
 
   useEffect(() => {
-    if (userMint && !userMint.term.isZero()) {
-      if (userMint.maturityTs.toNumber() > UTC_TIME) {
-        setMintPageOverride(2);
-      } else {
-        setMintPageOverride(3);
-      }
-    } else {
-      setMintPageOverride(1);
-    }
-    if (userStake && !userStake.term.isZero()) {
-      if (userStake.maturityTs.toNumber() > UTC_TIME) {
-        setStakePageOverride(2);
-      } else {
-        setStakePageOverride(3);
-      }
-    } else {
-      setStakePageOverride(1);
-    }
-  }, [userMint, userStake]);
+    // if (userMint && !userMint.term.isZero()) {
+    //   if (userMint.maturityTs.toNumber() > UTC_TIME) {
+    //     setMintPageOverride(2);
+    //   } else {
+    //     setMintPageOverride(3);
+    //   }
+    // } else {
+    //   setMintPageOverride(1);
+    // }
+    // if (userStake && !userStake.term.isZero()) {
+    //   if (userStake.maturityTs.toNumber() > UTC_TIME) {
+    //     setStakePageOverride(2);
+    //   } else {
+    //     setStakePageOverride(3);
+    //   }
+    // } else {
+    //   setStakePageOverride(1);
+    // }
+  }, []);
 
   const ChainList: NextPage<{ chains: Chain[] }> = ({ chains }) => {
     return (
@@ -125,7 +123,7 @@ export const Navbar: NextPage = () => {
   return (
     <div className="navbar">
       <div className="navbar-start space-x-2">
-        <a className="text-neutral normal-case text-3xl font-light">XEN</a>
+        <a className="text-neutral normal-case text-3xl font-light">FREN Labs</a>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal glass rounded-box p-2 space-x-4">
@@ -207,8 +205,8 @@ export const Navbar: NextPage = () => {
                     (connector as InjectedConnector)?.watchAsset?.({
                       address: token.address,
                       decimals: token.decimals,
-                      image: "https://xen.fyi/images/xen.png",
-                      symbol: token.symbol ?? "XEN",
+                      image: "https://chain.fenus.xyz/images/fren.jpg",
+                      symbol: token.symbol ?? "FREN",
                     });
                     (document.activeElement as HTMLElement).blur();
                   }}

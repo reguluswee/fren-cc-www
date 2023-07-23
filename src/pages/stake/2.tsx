@@ -1,3 +1,8 @@
+import {
+  useAccount,
+  useContractRead,
+} from "wagmi";
+
 import Link from "next/link";
 import Container from "~/components/containers/Container";
 import { progressDays } from "~/lib/helpers";
@@ -15,13 +20,42 @@ import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Breadcrumbs from "~/components/Breadcrumbs";
 
+const stakeAddress = "0x3a6370B6C99a776833540f1eB884417604011a68"
+const stakeAbi = [{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint8","name":"version","type":"uint8"}],"name":"Initialized","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"uint256","name":"term","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"stakeAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"estimateReward","type":"uint256"}],"name":"Staked","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"uint256","name":"term","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"stakeAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"reward","type":"uint256"}],"name":"Withdrawn","type":"event"},{"inputs":[],"name":"FREN_BSC","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"MAX_STAKE_AMOUNT","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"MIN_STAKE_AMOUNT","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"SECONDS_IN_DAY","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"SECONDS_IN_HOUR","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"activeStakes","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"durationDays","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"remainBalance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"stakeSel","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"startTs","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"userStakes","outputs":[{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"uint256","name":"stakeTs","type":"uint256"},{"internalType":"uint256","name":"stakeTerm","type":"uint256"},{"internalType":"uint256","name":"mrr","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"initialize","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_startTs","type":"uint256"},{"internalType":"uint256","name":"_duration","type":"uint256"}],"name":"setTsAndDura","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"rewardBalance","type":"uint256"}],"name":"addReward","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"term","type":"uint256"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"stake","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"withdraw","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_owner","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"withdraw","outputs":[],"stateMutability":"nonpayable","type":"function"}]
+
+export interface UserStake {
+  amount : number;
+  stakeTs : number;
+  stakeTerm : number;
+  mrr : number;
+}
+
 const Stake = () => {
   const { t } = useTranslation("common");
+
+  const { address } = useAccount();
+  
+  const [userStake, setUserStake] = useState<UserStake>();
 
   const [progress, setProgress] = useState(0);
   const [percent, setPercent] = useState(0);
 
-  const { xenBalance, userStake, genesisTs, globalRank, currentAPY } =
+  const {} = useContractRead({
+    addressOrName: stakeAddress,
+    contractInterface: stakeAbi,
+    functionName: "userStakes",
+    args: [address],
+    onSuccess: function(data) {
+      setUserStake({
+        amount: data.amount,
+        stakeTs: data.stakeTs,
+        stakeTerm: data.stakeTerm,
+        mrr: data.mrr,
+      })
+    }
+  })
+
+  const { xenBalance } =
     useContext(XENContext);
 
   const mintItems = [
@@ -30,24 +64,24 @@ const Stake = () => {
       value: Number(
         ethers.utils.formatUnits(xenBalance?.value ?? BigNumber.from(0))
       ),
-      suffix: " XEN",
+      suffix: " FREN",
     },
     {
       title: t("card.staked"),
       value: Number(
         ethers.utils.formatUnits(userStake?.amount ?? BigNumber.from(0))
       ),
-      suffix: " XEN",
+      suffix: " FREN",
       tokenDecimals: 2,
     },
     {
-      title: t("card.annual-percentage-yield"),
-      value: userStake?.apy.toNumber() ?? 0,
+      title: "MRR",
+      value: userStake?.mrr ?? 0,
       suffix: "%",
     },
     {
       title: t("card.term"),
-      value: userStake?.term.toNumber() ?? 0,
+      value: userStake?.stakeTerm ?? 0,
       suffix: ` ${t("card.days")}`,
       decimals: 0,
     },
@@ -56,14 +90,15 @@ const Stake = () => {
   useEffect(() => {
     if (userStake) {
       const progress = progressDays(
-        userStake.maturityTs.toNumber(),
-        userStake.term.toNumber()
+        // userStake.maturityTs.toNumber(),
+        userStake.stakeTs + userStake.stakeTerm * 24 * 3600,
+        userStake.stakeTerm
       );
 
       setProgress(progress);
-      setPercent((progress / userStake.term.toNumber()) * 100);
+      setPercent((progress / userStake.stakeTerm) * 100);
     }
-  }, [progress, userStake, userStake?.maturityTs, userStake?.term]);
+  }, [progress, userStake, userStake?.stakeTs, userStake?.stakeTerm]);
 
   return (
     <Container className="max-w-2xl">
@@ -87,7 +122,7 @@ const Stake = () => {
           <h2 className="card-title">{t("stake.staking")}</h2>
           <div className="stats stats-vertical bg-transparent text-neutral space-y-4">
             <Countdown
-              date={(userStake?.maturityTs.toNumber() ?? 0) * 1000}
+              date={(userStake?.stakeTs ?? 0) * 1000}
               intervalDelay={0}
               renderer={(props) => (
                 <CountdownCard
@@ -102,9 +137,9 @@ const Stake = () => {
               title={t("card.progress")}
               percentComplete={percent}
               value={progress}
-              max={userStake?.term.toNumber() ?? 0}
-              daysRemaining={userStake?.term.toNumber() ?? 0 - progress}
-              dateTs={userStake?.maturityTs.toNumber() ?? 0}
+              max={userStake?.stakeTerm ?? 0}
+              daysRemaining={userStake?.stakeTerm ?? 0 - progress}
+              dateTs={userStake?.stakeTs ?? 0}
             />
             {mintItems.map((item, index) => (
               <NumberStatCard

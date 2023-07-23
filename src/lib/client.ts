@@ -9,35 +9,27 @@ import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { InjectedConnector } from "wagmi/connectors/injected";
-import { bscTestnet } from "~/lib/chains/bscTestnet";
+
 import { bscMainnet } from "~/lib/chains/bscMainnet";
-import { pulseChain } from "~/lib/chains/pulseChainTestnet";
-import { avaxMainnet } from "~/lib/chains/avaxMainnet";
-import { ethwMainnet } from "~/lib/chains/ethwMainnet";
-import { moonbeamMainnet } from "./chains/moonbeamMainnet";
-import { evmosMainnet } from "./chains/evmosMainnet";
-import { fantomMainnet } from "./chains/fantomMainnet";
-import { dogechainMainnet } from "./chains/dogechainMainnet";
-import { okxMainnet } from "./chains/okxMainnet";
 
 const alchemyId = process.env.NEXT_PUBLIC_ALCHEMY_ID;
 const infuraId = process.env.NEXT_PUBLIC_INFURA_ID;
 
 export const chainList = [
-  chain.mainnet,
+  // chain.mainnet,
   bscMainnet,
-  chain.polygon,
-  avaxMainnet,
-  ethwMainnet,
-  moonbeamMainnet,
-  evmosMainnet,
-  fantomMainnet,
-  dogechainMainnet,
-  bscTestnet,
-  okxMainnet,
-  chain.goerli,
-  pulseChain,
-  chain.polygonMumbai,
+  // chain.polygon,
+  // avaxMainnet,
+  // ethwMainnet,
+  // moonbeamMainnet,
+  // evmosMainnet,
+  // fantomMainnet,
+  // dogechainMainnet,
+  // bscTestnet,
+  // okxMainnet,
+  // chain.goerli,
+  // pulseChain,
+  // chain.polygonMumbai,
 ];
 
 export const { chains, provider, webSocketProvider } = configureChains(
@@ -77,7 +69,7 @@ export const client = createClient({
     new CoinbaseWalletConnector({
       chains,
       options: {
-        appName: "xen.fyi",
+        appName: "FREN.MultiChain",
       },
     }),
     new WalletConnectConnector({

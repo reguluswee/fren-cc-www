@@ -33,24 +33,10 @@ const Footer = () => {
         </div>
       </div>
       <AddressLink
-        name={t("contract")}
+        name={"Token Contract"}
         address={address}
         chain={defaultChain}
       />
-      <AddressLink
-        name={t("donate")}
-        address={DONATION_ADDRESS}
-        chain={defaultChain}
-      />
-      <div className="grid grid-flow-col gap-4">
-        {textLinkItems.map((item, index) => (
-          <Link href={item.href} key={index}>
-            <a target="_blank" className="link link-hover text-neutral">
-              {t(item.t)}
-            </a>
-          </Link>
-        ))}
-      </div>
     </footer>
   );
 };
