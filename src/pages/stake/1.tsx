@@ -277,7 +277,7 @@ const Stake = () => {
                   <div>
                     <h3 className="font-bold">{t("stake.terms")}</h3>
                     <div className="text-xs">
-                    Staking Event is now live! Powered by the FREN development team, this one-month event offers high-reward incentives for all participants. Stay vigilant for the latest updates and seize the opportunity to participate in the thriving FREN ecosystem. We thank you for your continuous support and participation. Let's make the FREN community grow and prosper together!
+                    {"Staking Event is now live! Powered by the FREN development team, this one-month event offers high-reward incentives for all participants. Stay vigilant for the latest updates and seize the opportunity to participate in the thriving FREN ecosystem. We thank you for your continuous support and participation. Let's make the FREN community grow and prosper together!"}
                     </div>
                   </div>
                 </div>
