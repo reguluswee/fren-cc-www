@@ -242,6 +242,7 @@ const Stake = () => {
           <form onSubmit={handleSubmit(handleStakeSubmit)}>
             <div className="flex flex-col space-y-4">
               <h2 className="card-title text-neutral">{t("stake.start")}</h2>
+              <div className="stat-desc text-right">Total Rewards : {7200000000} FREN</div>
               <div className="stat-desc text-right">Remain Rewards : {remainQuota.div(BigNumber.from("1000000000000000000")).toString()} FREN</div>
               
               <MaxValueField
