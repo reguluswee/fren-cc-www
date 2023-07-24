@@ -52,6 +52,7 @@ const Stake = () => {
   const [allowanceAmount, setAllowanceAmount] = useState(BigNumber.from(0))
   const [aping, setAping] = useState(false)
   const [selTerm, setSelTerm] = useState(0);
+  const [startTs, setStartTs] = useState(0);
 
   const { xenBalance, feeData } =
     useContext(XENContext);
@@ -114,6 +115,16 @@ const Stake = () => {
       setAllowanceAmount(BigNumber.from(data))
     }
   })
+  const {} = useContractRead({
+    addressOrName: stakeAddress,
+    contractInterface: stakeAbi,
+    functionName: "startTs",
+    args: [],
+    onSuccess(data) {
+      console.log("开始时间戳：", data)
+      setStartTs(Number(data))
+    }
+  })
 
   const {} = useContractRead({
     addressOrName: stakeAddress,
@@ -134,9 +145,6 @@ const Stake = () => {
   })
 
   const handleChange = (e : any) => {
-    //setSelToken(e.target.value)
-    console.log(e.target.value)
-    // watchAllFields.startStakeDays = Number(e.target.value)
     setSelTerm(Number(e.target.value))
   }
 
@@ -184,8 +192,12 @@ const Stake = () => {
   /*** USE EFFECT ****/
 
   useEffect(() => {
-    if (!processing && address && userStake?.stakeTerm == 0) {
-      setDisabled(false);
+    if(!(startTs < Math.floor(new Date().getTime() / 1000))) {
+      setDisabled(true)
+    } else {
+      if (!processing && address && userStake?.stakeTerm == 0) {
+        setDisabled(false);
+      }
     }
   }, [
     address,
@@ -194,6 +206,7 @@ const Stake = () => {
     selTerm,
     isValid,
     config,
+    startTs,
   ]);
 
   return (
