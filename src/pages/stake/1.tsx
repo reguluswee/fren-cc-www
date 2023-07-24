@@ -51,6 +51,7 @@ const Stake = () => {
 
   const [allowanceAmount, setAllowanceAmount] = useState(BigNumber.from(0))
   const [aping, setAping] = useState(false)
+  const [selTerm, setSelTerm] = useState(0);
 
   const { xenBalance, feeData } =
     useContext(XENContext);
@@ -73,12 +74,6 @@ const Stake = () => {
         )
         .positive(t("form-field.amount-positive"))
         .typeError(t("form-field.amount-required")),
-      startStakeDays: yup
-        .number()
-        .required(t("form-field.days-required"))
-        .max(1000, t("form-field.days-maximum", { numberOfDays: 1000 }))
-        .positive(t("form-field.days-positive"))
-        .typeError(t("form-field.days-required")),
     })
     .required();
 
@@ -138,18 +133,24 @@ const Stake = () => {
     }
   })
 
+  const handleChange = (e : any) => {
+    //setSelToken(e.target.value)
+    console.log(e.target.value)
+    // watchAllFields.startStakeDays = Number(e.target.value)
+    setSelTerm(Number(e.target.value))
+  }
+
   const { config } = usePrepareContractWrite({
     addressOrName: stakeAddress,
     contractInterface: stakeAbi,
     functionName: "stake",
     args: [
-      watchAllFields.startStakeDays ?? 0,
-      ethers.utils.parseUnits(
-        (Number(watchAllFields?.startStakeAmount) || 0).toString(),
-        xenBalance?.decimals ?? 0
-      ),
+      selTerm ?? 0,
+      ethers.utils.parseUnits((Number(watchAllFields?.startStakeAmount) || 0).toString(), xenBalance?.decimals ?? 0),
     ],
     enabled: !disabled,
+    onError(e) {
+    }
   });
   const { data: stakeData, write: writeStake } = useContractWrite({
     ...config,
@@ -183,18 +184,14 @@ const Stake = () => {
   /*** USE EFFECT ****/
 
   useEffect(() => {
-    if (watchAllFields.startStakeDays) {
-      // setMaturity(UTC_TIME + (watchAllFields.startStakeDays ?? 0) * 86400);
-    }
-
-    if (!processing && address && userStake && userStake.stakeTerm == 0) {
+    if (!processing && address && userStake?.stakeTerm == 0) {
       setDisabled(false);
     }
   }, [
     address,
     processing,
     userStake,
-    watchAllFields.startStakeDays,
+    selTerm,
     isValid,
     config,
   ]);
@@ -237,18 +234,19 @@ const Stake = () => {
                 setValue={setValue}
               />
 
-              <MaxValueField
-                title={t("form-field.days").toUpperCase()}
-                description={t("form-field.days-description")}
-                decimals={0}
-                value={1000}
-                disabled={disabled}
-                errorMessage={
-                  <ErrorMessage errors={errors} name="startStakeDays" />
-                }
-                register={register("startStakeDays")}
-                setValue={setValue}
-              />
+              <div className="form-control w-full">
+                <label className="label text-neutral">
+                  <span className="label-text text-neutral">{"Stake Days"}</span>
+                  {/* <span className="label-text-alt text-error">{"Stake Days"}</span> */}
+                </label>
+                <select className="input input-bordered w-full text-neutral" onChange={(e) => handleChange(e)}>
+                    <option value="0">NONE</option>
+                    <option value="3">3 days(3%/M)</option>
+                    <option value="7">7 days(8%/M)</option>
+                    <option value="15">15 days(18%/M)</option>
+                    <option value="30">30 days(36%/M)</option>
+                </select>
+              </div>
 
               {/* <div className="flex stats glass w-full text-neutral">
                 <NumberStatCard

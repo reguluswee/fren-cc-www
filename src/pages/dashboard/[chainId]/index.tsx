@@ -36,26 +36,6 @@ const Dashboard: NextPage = () => {
     chainId: chainFromId?.id,
   });
 
-  const generalStats = [
-    {
-      title: t("card.global-rank"),
-      value: 0,
-    },
-    {
-      title: t("card.active-mints"),
-      value: 0,
-    },
-    {
-      title: t("card.active-stakes"),
-      value: 0,
-    },
-    {
-      title: t("card.max-mint-term"),
-      value: 0 / 86400,
-      suffix: " Days",
-    },
-  ];
-
   const stakeItems = [
     {
       title: t("card.total"),
@@ -117,16 +97,6 @@ const Dashboard: NextPage = () => {
                   description={xenContract(chainFromId).addressOrName}
                 />
               )}
-
-              {generalStats.map((item, index) => (
-                <NumberStatCard
-                  key={index}
-                  title={item.title}
-                  value={item.value}
-                  decimals={0}
-                  suffix={item.suffix}
-                />
-              ))}
             </div>
           </CardContainer>
 
