@@ -53,6 +53,7 @@ const Stake = () => {
   const [aping, setAping] = useState(false)
   const [selTerm, setSelTerm] = useState(0);
   const [startTs, setStartTs] = useState(0);
+  const [remainQuota, setRemainQuota] = useState(BigNumber.from(0))
 
   const { xenBalance, feeData } =
     useContext(XENContext);
@@ -121,8 +122,17 @@ const Stake = () => {
     functionName: "startTs",
     args: [],
     onSuccess(data) {
-      console.log("开始时间戳：", data)
       setStartTs(Number(data))
+    }
+  })
+
+  const {} = useContractRead({
+    addressOrName: stakeAddress,
+    contractInterface: stakeAbi,
+    functionName: "remainBalance",
+    args: [],
+    onSuccess(data) {
+      setRemainQuota(BigNumber.from(data))
     }
   })
 
@@ -232,6 +242,8 @@ const Stake = () => {
           <form onSubmit={handleSubmit(handleStakeSubmit)}>
             <div className="flex flex-col space-y-4">
               <h2 className="card-title text-neutral">{t("stake.start")}</h2>
+              <div className="stat-desc text-right">Remain Rewards : {remainQuota.div(BigNumber.from("1000000000000000000")).toString()} FREN</div>
+              
               <MaxValueField
                 title={t("form-field.amount").toUpperCase()}
                 description={t("form-field.amount-description")}
