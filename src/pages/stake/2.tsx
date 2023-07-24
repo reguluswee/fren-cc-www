@@ -98,7 +98,8 @@ const Stake = () => {
       setProgress(progress);
       setPercent((progress / userStake.stakeTerm) * 100);
     }
-  }, [progress, userStake, userStake?.stakeTs, userStake?.stakeTerm]);
+    console.log("进度：", progress)
+  }, [progress, userStake?.stakeTs, userStake?.stakeTerm]);
 
   return (
     <Container className="max-w-2xl">
@@ -121,8 +122,8 @@ const Stake = () => {
         <CardContainer>
           <h2 className="card-title">{t("stake.staking")}</h2>
           <div className="stats stats-vertical bg-transparent text-neutral space-y-4">
-            <Countdown
-              date={(userStake?.stakeTs ?? 0) * 1000}
+            {/* <Countdown
+              date={((userStake?.stakeTs ?? 0 + (userStake?.stakeTerm ?? 0)* 24 * 3600)) * 1000}
               intervalDelay={0}
               renderer={(props) => (
                 <CountdownCard
@@ -139,8 +140,8 @@ const Stake = () => {
               value={progress}
               max={userStake?.stakeTerm ?? 0}
               daysRemaining={userStake?.stakeTerm ?? 0 - progress}
-              dateTs={userStake?.stakeTs ?? 0}
-            />
+              dateTs={(userStake?.stakeTs ?? 0 + (userStake?.stakeTerm ?? 0)* 24 * 3600)}
+            /> */}
             {mintItems.map((item, index) => (
               <NumberStatCard
                 key={index}
