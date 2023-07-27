@@ -44,42 +44,38 @@ const TkTrans = () => {
 
   const { xenBalance, feeData } = useContext(XENContext);
 
-
-
   /*** FORM SETUP ***/
 
-  const schema = yup
-    .object()
-    .shape({
-      // startStakeAmount: yup
-      //   .number()
-      //   .required(t("form-field.amount-required"))
-      //   .max(
-      //     Number(ethers.utils.formatUnits(xenBalance?.value ?? BigNumber.from(0))),
-      //     t("form-field.amount-maximum", {
-      //       maximumAmount: xenBalance?.formatted,
-      //     })
-      //   )
-      //   .positive(t("form-field.amount-positive"))
-      //   .typeError(t("form-field.amount-required")),
-      // startStakeDays: yup
-      //   .number()
-      //   .required(t("form-field.days-required"))
-      //   .max(1000, t("form-field.days-maximum", { numberOfDays: 1000 }))
-      //   .positive(t("form-field.days-positive"))
-      //   .typeError(t("form-field.days-required")),
-    })
-    .required();
+  // const schema = yup
+  //   .object()
+  //   .shape({
+  //     startStakeAmount: yup
+  //       .number()
+  //       .required(t("form-field.amount-required"))
+  //       .max(
+  //         Number(ethers.utils.formatUnits(xenBalance?.value ?? BigNumber.from(0))),
+  //         t("form-field.amount-maximum", {
+  //           maximumAmount: xenBalance?.formatted,
+  //         })
+  //       )
+  //       .positive(t("form-field.amount-positive"))
+  //       .typeError(t("form-field.amount-required")),
+  //     startStakeDays: yup
+  //       .number()
+  //       .required(t("form-field.days-required"))
+  //       .max(1000, t("form-field.days-maximum", { numberOfDays: 1000 }))
+  //       .positive(t("form-field.days-positive"))
+  //       .typeError(t("form-field.days-required")),
+  //   })
+  //   .required();
 
   const {
-    register,
     handleSubmit,
     watch,
     formState: { errors, isValid },
-    setValue,
   } = useForm({
     mode: "onChange",
-    resolver: yupResolver(schema),
+    // resolver: yupResolver(schema),
   });
 
   const handleChange = (e : any) => {
@@ -138,13 +134,12 @@ const TkTrans = () => {
     contractInterface: batchToolAbi,
     functionName: "batchTransToken",
     args: [
-      tokenContract,
+      tokenContract==''?0:tokenContract,
       ethers.utils.parseUnits((Number(singleAmount) || 0).toString(), xenBalance?.decimals ?? 0),
       efftAddrs
     ],
     enabled: !disabled,
     onError(e){
-      console.log("cuowu", e)
     }
   });
   const { data: tokenData, write: writeToken } = useContractWrite({
@@ -173,7 +168,6 @@ const TkTrans = () => {
     } else {
 
       let allow = await readAllowance()
-      console.log("授权的金额", allow)
       let needAmount = ethers.utils.parseUnits((Number(singleAmount) || 0).toString(), xenBalance?.decimals ?? 0)
       needAmount = needAmount.mul(BigNumber.from(addressLength))
 
@@ -181,9 +175,7 @@ const TkTrans = () => {
         writeToken?.();
       } else {
         let status = await asyncApprove();
-        console.log("返回的授权结果", status)
         if(status==1) {
-          console.log("这里应该可以了吧")
           writeToken?.();
         }
       }
