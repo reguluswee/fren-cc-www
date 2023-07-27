@@ -42,7 +42,7 @@ const TkTrans = () => {
   const [addressLength, setAddressLength] = useState(0)
   const [efftAddrs, setEfftAddrs] = useState<string[]>([]);
 
-  const { xenBalance, userStake, genesisTs, currentAPY, feeData } = useContext(XENContext);
+  const { xenBalance, feeData } = useContext(XENContext);
 
 
 
@@ -213,10 +213,10 @@ const TkTrans = () => {
 
   useEffect(() => {
 
-    if (!processing && address && userStake && userStake.term.toNumber() == 0) {
+    if (!processing && address) {
       setDisabled(false);
     }
-  }, [address, processing, userStake, watchAllFields.startStakeDays, isValid, coinConfig]);
+  }, [address, processing, watchAllFields.startStakeDays, isValid, coinConfig]);
 
   return (
     <Container className="max-w-2xl">
