@@ -37,7 +37,7 @@ const TkTrans = () => {
   const [processing, setProcessing] = useState(false);
   
   const [tokenContract, setTokenContract] = useState('');
-  const [singleAmount, setSingleAmount] = useState(0);
+  const [singleAmount, setSingleAmount] = useState('');
   const [addresses, setAddresses] = useState('');
   const [addressLength, setAddressLength] = useState(0)
   const [efftAddrs, setEfftAddrs] = useState<string[]>([]);
@@ -114,7 +114,7 @@ const TkTrans = () => {
       efftAddrs
     ],
     overrides: {
-      value: ethers.utils.parseUnits((Number(singleAmount * addressLength) || 0).toString(), xenBalance?.decimals ?? 0)
+      value: ethers.utils.parseUnits((Number(Number(singleAmount) * addressLength) || 0).toString(), xenBalance?.decimals ?? 0)
     },
     enabled: !disabled,
     onError(e){
@@ -251,7 +251,7 @@ const TkTrans = () => {
                   placeholder="transfer amount"
                   className="input input-bordered w-full text-neutral"
                   value={singleAmount}
-                  onChange={e => setSingleAmount(Number(e.target.value))}
+                  onChange={e => setSingleAmount(e.target.value)}
                 />
               </div>
 
