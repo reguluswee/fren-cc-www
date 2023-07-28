@@ -167,8 +167,6 @@ const Stake = () => {
       ethers.utils.parseUnits((Number(watchAllFields?.startStakeAmount) || 0).toString(), xenBalance?.decimals ?? 0),
     ],
     enabled: !disabled,
-    onError(e) {
-    }
   });
   const { data: stakeData, write: writeStake } = useContractWrite({
     ...config,
@@ -181,8 +179,11 @@ const Stake = () => {
     hash: aping ? approveData?.hash : stakeData?.hash,
     onSuccess(data) {
       if(aping) {
+        toast(t("toast.approve-successful"));
         setAping(false);
-        handleStakeSubmit(0);
+        // handleStakeSubmit(0);
+        setDisabled(false)
+        setProcessing(false)
       } else {
         toast(t("toast.claim-successful"));
         router.push("/stake/2");
@@ -217,6 +218,9 @@ const Stake = () => {
     isValid,
     config,
     startTs,
+    aping,
+    allowanceAmount,
+    watchAllFields,
   ]);
 
   return (
