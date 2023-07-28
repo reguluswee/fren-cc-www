@@ -306,6 +306,25 @@ const Stake = () => {
                   </div>
                 </div>
               </div>
+              <div className="alert shadow-lg glass">
+                <div>
+                  <div>
+                    <InformationCircleIcon className="w-8 h-8" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold">{"Stake Rules"}</h3>
+                    <div className="text-xs">
+                    {"1. The minimum amount for staking is 1M"}
+                    </div>
+                    <div className="text-xs">
+                    {"2. The maximum amount for staking is 2B"}
+                    </div>
+                    <div className="text-xs">
+                    {"3. The staking can't be ended until it reaches maturity"}
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div className="form-control w-full">
                 <button
                   type="submit"
