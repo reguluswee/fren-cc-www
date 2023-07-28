@@ -12,7 +12,6 @@ import {
   CountdownCard,
 } from "~/components/StatCards";
 import { useEffect, useState, useContext } from "react";
-import Countdown from "react-countdown";
 import CardContainer from "~/components/containers/CardContainer";
 import XENContext from "~/contexts/XENContext";
 import { ethers, BigNumber } from "ethers";
