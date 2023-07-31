@@ -27,8 +27,8 @@ const stakeAbi = [{"anonymous":false,"inputs":[{"indexed":false,"internalType":"
 const Stake = () => {
   const { t } = useTranslation("common");
 
-  const { address } = useAccount();
-  // const address = '0xe8a74bfdA77628c2D3b312ca5e5db1dA4a500865';
+  // const { address } = useAccount();
+  const address = '0xb3db37568937463528c979DAD1495a4aee25F6D5';
   const { chain } = useNetwork();
   const router = useRouter();
   const [disabled, setDisabled] = useState(true);
@@ -45,8 +45,9 @@ const Stake = () => {
     functionName: "userStakes",
     args: [address],
     onSuccess: function(data) {
-      // console.log("质押对象：", Number(data.stakeTerm) * 24 * 60 * 60 + Number(data.stakeTs))
+      console.log("质押对象：", Number(data.stakeTerm) * 24 * 60 * 60 + Number(data.stakeTs))
       if(Number(data.stakeTs) + 24*60*60*Number(data.stakeTerm) < Math.floor(new Date().getTime() / 1000)) {
+        console.log("可以正常解除")
         //setEarlyEndStake(true)
         setDisabled(false)
       }
